@@ -3,6 +3,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import 'tailwindcss/tailwind.css';
 import MiskaImg from './assets/mishka.jpg'
+import ReactDOMServer from "react-dom/server";
 
 const MyComponent = () => (
     <div className="container mx-auto p-4" id="pdf-content">
@@ -44,26 +45,23 @@ const MyComponent = () => (
 );
 
 const App = () => {
-    const generatePdf = async () => {
-        const input = document.getElementById('pdf-content');
-        try {
-            const canvas = await html2canvas(input);
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF();
-            const imgWidth = 180;
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            pdf.addImage(imgData, 'PNG', 15, 15, imgWidth, imgHeight);
-            pdf.save('document.pdf');
-        } catch (error) {
-            console.error('Error PDF:', error);
-        }
+    const exportPDF = () => {
+        let element = (
+            <MyComponent />
+        );
+        const doc = new jsPDF("p", "pt", "letter");
+        doc.html(ReactDOMServer.renderToString(element), {
+            callback: function (doc) {
+                doc.save('sample.pdf');
+            }
+        });
     };
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
             <MyComponent />
             <button
-                onClick={generatePdf}
+                onClick={exportPDF}
                 className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
             >
                 Download PDF
