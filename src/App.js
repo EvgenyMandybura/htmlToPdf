@@ -1,5 +1,4 @@
 import React from 'react';
-import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import 'tailwindcss/tailwind.css';
 import MiskaImg from './assets/mishka.jpg'
